@@ -1,0 +1,16 @@
+----------------------------
+Documentation
+----------------------------
+For details about the Persistence Health Monitor, please refer to to following documents:
+
+
+----------------------------
+How to create doxygen documentation
+----------------------------
+
+The doxygen package must be installed.
+run "doxygen doc/pcl_doxyfile" and the html documentation will be generated in the doc folder. 
+
+
+
+

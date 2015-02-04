@@ -12,7 +12,7 @@
  * with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ******************************************************************************/
  /**
- * @file           persistence_hm_dbus_message.c
+ * @file           persistence_hm_dbus_message.h
  * @ingroup        Persistence Health Monitor
  * @author         Ingo Huerner
  * @brief          Implementation of the persistence health monitor dbus message dispatching.

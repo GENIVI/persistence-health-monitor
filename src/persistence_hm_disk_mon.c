@@ -59,10 +59,10 @@ static const char gCharLookup[] =
 };
 
 
-char* gpConfigFileMap = 0;
+static char* gpConfigFileMap = 0;
 static char* gpTokenArray[TOKENARRAYSIZE];
-int gTokenCounter = 0;
-unsigned int gConfigFileSize = 0;
+static int gTokenCounter = 0;
+static unsigned int gConfigFileSize = 0;
 
 /// default configuration file location
 const char* gDefaultConfig = "/etc/persistence_phm.conf";
@@ -71,14 +71,14 @@ const char* gDefaultConfig = "/etc/persistence_phm.conf";
 static jsw_rbtree_t *gRb_tree_bl = NULL;
 
 // local function prototypes
-int readConfigFile(const char* filename);
-void releaseConfigFile(void);
-void fillCharTokenArray();
-int getConfiguration(void);
+static int readConfigFile(const char* filename);
+static void releaseConfigFile(void);
+static void fillCharTokenArray();
+static int getConfiguration(void);
 static void  key_val_rel(void *p);
 static void* key_val_dup(void *p);
-int key_val_cmp(const void *p1, const void *p2 );
-unsigned int findMaxSize(unsigned int folderName);
+static int key_val_cmp(const void *p1, const void *p2 );
+static unsigned int findMaxSize(unsigned int folderName);
 //----------------------------------------------------------
 
 #define FILE_DIR_NOT_SELF_OR_PARENT(s) ((s)[0]!='.'&&(((s)[1]!='.'||(s)[2]!='\0')||(s)[1]=='\0'))
@@ -93,10 +93,10 @@ static const char* gPersistencePath = "/Data/mnt-c";
 static unsigned int gSizeSubDir[SUBDIR_ARRAYSIZE] = {0};
 
 
-int getConfigSize(const char* appID, unsigned int* sizes);
+//static int getConfigSize(const char* appID, unsigned int* sizes);
 
 
-int checkDiskFreeSpace(const char* thePath, int theDepth)
+static int checkDiskFreeSpace(const char* thePath, int theDepth)
 {
    unsigned int sumSize = 0;
    struct dirent *dirent = NULL;
@@ -165,7 +165,7 @@ int checkDiskFreeSpace(const char* thePath, int theDepth)
 
 
 
-void* runMonitorThread(void* dataPtr)
+static void* runMonitorThread(void* dataPtr)
 {
    while(1) // run forever
    {
@@ -202,7 +202,7 @@ int startMonitorThread()
 }
 
 
-int getConfiguration(void)
+static int getConfiguration(void)
 {
    int rval = 0;
    const char *filename = getenv("PERS_PHM_CFG");
@@ -263,7 +263,7 @@ int getConfiguration(void)
 
 
 
-int readConfigFile(const char* filename)
+static int readConfigFile(const char* filename)
 {
    int fd = 0;
    struct stat buffer;
@@ -316,7 +316,7 @@ int readConfigFile(const char* filename)
 
 
 
-void fillCharTokenArray()
+static void fillCharTokenArray()
 {
    unsigned int i=0;
    int blankCount=0;
@@ -357,7 +357,7 @@ void fillCharTokenArray()
 
 
 
-void releaseConfigFile(void)
+static void releaseConfigFile(void)
 {
    // unmap the mapped config file if successfully mapped
    if(gpConfigFileMap != 0)
@@ -371,7 +371,7 @@ void releaseConfigFile(void)
 
 
 /// compare function for tree key_value_s item
-int key_val_cmp(const void *p1, const void *p2 )
+static int key_val_cmp(const void *p1, const void *p2 )
 {
    int rval = -1;
    key_value_s* first;
@@ -399,7 +399,7 @@ int key_val_cmp(const void *p1, const void *p2 )
 
 
 /// duplicate function for key_value_s item
-void* key_val_dup(void *p)
+static void* key_val_dup(void *p)
 {
    key_value_s* src = NULL;
    key_value_s* dst = NULL;
@@ -421,7 +421,7 @@ void* key_val_dup(void *p)
 
 
 /// release function for key_value_s item
-void  key_val_rel(void *p )
+static void  key_val_rel(void *p )
 {
    key_value_s* rel = NULL;
    rel = (key_value_s*)p;
@@ -432,7 +432,7 @@ void  key_val_rel(void *p )
 
 
 
-unsigned int findMaxSize(unsigned int folderName)
+static unsigned int findMaxSize(unsigned int folderName)
 {
    unsigned int rval = 0;
    key_value_s* item = NULL;

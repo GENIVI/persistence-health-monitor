@@ -169,7 +169,8 @@ static void  unregisterObjectPathFallback(DBusConnection *connection, void *user
    DLT_LOG(phmContext, DLT_LOG_INFO, DLT_STRING("unregisterObjectPathFallback\n"));
 }
 
-int registerPhmSessionNSM(DBusConnection* conn)
+
+int sendNsmMessage(DBusConnection* conn, const char* method, int seatID, int sessionState)
 {
    int rval = 0;
 
@@ -181,21 +182,18 @@ int registerPhmSessionNSM(DBusConnection* conn)
       DBusMessage* message = dbus_message_new_method_call("org.genivi.NodeStateManager",              // destination
                                                           "/org/genivi/NodeStateManager/Consumer",    // path
                                                           "org.genivi.NodeStateManager.Consumer",     // interface
-                                                          "RegisterSession");                         // method
+                                                          method);                         // method
       if(message != NULL)
       {
          const char* sessionName = "PersistenceFailure";
          const char* sessionOwner = "PersistenceHealthMonitor";
-         unsigned int seatID       = NsmSeat_Driver;
-         unsigned int sessionState = NsmSessionState_Inactive;
 
          dbus_message_append_args(message, DBUS_TYPE_STRING, &sessionName,
                                            DBUS_TYPE_STRING, &sessionOwner,
-                                           DBUS_TYPE_UINT32, &seatID,
-                                           DBUS_TYPE_UINT32, &sessionState, DBUS_TYPE_INVALID);
+                                           DBUS_TYPE_INT32, &seatID,
+                                           DBUS_TYPE_INT32, &sessionState, DBUS_TYPE_INVALID);
 
 
-         printf("registerPhmSessionNSM\n");
          if(!dbus_connection_send(conn, message, 0))
          {
             DLT_LOG(phmContext, DLT_LOG_ERROR, DLT_STRING("sendLcmReg - Access denied"), DLT_STRING(error.message) );
@@ -215,7 +213,6 @@ int registerPhmSessionNSM(DBusConnection* conn)
 
    return rval;
 }
-
 
 
 int setup_dbus_mainloop(void)
@@ -278,8 +275,13 @@ int setup_dbus_mainloop(void)
    }
 
    // register persistence failure session:
-   registerPhmSessionNSM(conn);
+   sendNsmMessage(conn, "RegisterSession", NsmSeat_Driver, NsmSessionState_Inactive);
 
+
+   sleep(5);
+
+   printf("Set failure state to active\n");
+   sendNsmMessage(conn, "SetSessionState", NsmSeat_Driver, NsmSessionState_Active);
 
    // setup the dbus
    mainLoop(vtablePersHM, vtableFallback, conn);

@@ -21,20 +21,11 @@
  * @see            
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-
-#define  PERSIST_CLIENT_LIBRARY_INTERFACE_VERSION   (0x01000000U)
 
 #include <string.h>
 
 unsigned int pclCrc32(unsigned int crc, const unsigned char *buf, size_t theSize);
 
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* CRC32_H */

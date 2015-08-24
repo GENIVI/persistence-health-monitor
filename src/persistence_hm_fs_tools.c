@@ -24,7 +24,6 @@
 #include <unistd.h>
 #include <poll.h>
 #include <stdio.h>
-#include <ext2fs/ext2_fs.h>
 #include <sys/mount.h>
 #include <sys/types.h>
 #include <sys/stat.h>
